@@ -1,11 +1,11 @@
 import { useState } from "react";
 import data from "../assets/data";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../redux/redux";
+import { cartSlice } from "../redux/redux";
 
 function OrderModal({ modalMenu, setModalOn }) {
-  const cart = useSelector((state) => state.cartReducer);
-  const dispatch = useDispatch((state) => state.cartReducer);
+  const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch((state) => state.cart);
   const [options, setOptions] = useState({ 온도: 0, 진하기: 0, 사이즈: 0 });
   const [quantity, setQuantity] = useState(1);
   const itemOptions = data.options;
@@ -46,8 +46,15 @@ function OrderModal({ modalMenu, setModalOn }) {
               </div>
               <button
                 onClick={() => {
-                  dispatch(addToCart(options, quantity, modalMenu.id));
+                  dispatch(
+                    cartSlice.actions.addToCart({
+                      options,
+                      quantity,
+                      id: modalMenu.id,
+                    })
+                  );
                   setModalOn(false);
+                  console.log(cartSlice.actions.addToCart.action);
                 }}
               >
                 장바구니 넣기

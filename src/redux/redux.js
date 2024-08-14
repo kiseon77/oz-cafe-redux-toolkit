@@ -1,5 +1,33 @@
 import { combineReducers, createStore, legacy_createStore } from "redux";
 import data from "../assets/data";
+import { createSlice } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
+
+export const menuSlice = createSlice({
+  name: "menu",
+  initialState: data.menu,
+  reducers: {},
+});
+
+export const cartSlice = createSlice({
+  name: "cart",
+  initialState: [],
+  reducers: {
+    addToCart(state, action) {
+     return [...state, action.payload];
+    },
+    removeFromCart(state, action) {
+     return state.filter((el) => action.payload !== el.id);
+    },
+  },
+});
+
+export const store = configureStore({
+  reducer: {
+    menu: menuSlice.reducer,
+    cart: cartSlice.reducer,
+  },
+});
 
 export const addToCart = (options, quantity, id) => {
   return {
@@ -15,22 +43,18 @@ export const removeFromCart = (id) => {
 };
 
 const cartReducer = (state = [], action) => {
-  switch (action.type){
-    case 'addToCart':
+  switch (action.type) {
+    case "addToCart":
       return [...state, action.payload];
-    case 'removeFromCart':
-      return state.filter(el=> action.payload.id !== el.id)
+    case "removeFromCart":
+      return state.filter((el) => action.payload.id !== el.id);
     default:
-      return state
+      return state;
   }
 };
 
-
 const menuReducer = (state = data.menu, action) => {
-  return state
+  return state;
 };
 
 const rootReducer = combineReducers({ cartReducer, menuReducer });
-
-
-export const store = legacy_createStore(rootReducer);
